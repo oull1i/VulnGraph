@@ -1,0 +1,13 @@
+services:
+  vulngraph:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    restart: unless-stopped

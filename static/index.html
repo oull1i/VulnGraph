@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="VulnGraph — explainable software supply-chain vulnerability triage and dependency intelligence.">
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/styles.css">
+  <title>VulnGraph · Vulnerability Intelligence</title>
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <a class="brand" href="/" aria-label="VulnGraph dashboard"><span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>Vuln<span class="brand-light">Graph</span><small>SECURITY INTELLIGENCE</small></span></a>
+      <div class="nav-label" data-i18n="workspace">WORKSPACE</div>
+      <nav class="sidebar-nav">
+        <a href="#overview" class="nav-link active" data-route="overview"><span class="nav-icon">▦</span><span data-i18n="overview">Overview</span></a>
+        <a href="#findings" class="nav-link" data-route="findings"><span class="nav-icon">≋</span><span data-i18n="findings">Findings</span><span id="nav-count" class="nav-count">0</span></a>
+        <a href="#graph" class="nav-link" data-route="graph"><span class="nav-icon">⌘</span><span data-i18n="dependencyMap">Dependency map</span></a>
+        <a href="#methodology" class="nav-link" data-route="methodology"><span class="nav-icon">◎</span><span data-i18n="methodology">Methodology</span></a>
+      </nav>
+      <div class="nav-label second-label" data-i18n="environment">ENVIRONMENT</div>
+      <div class="context-widget">
+        <div class="context-top"><span class="small-title" data-i18n="contextTitle">Asset context</span><span class="context-dot"></span></div>
+        <label class="toggle-row" for="internet"><span data-i18n="exposure">Internet-facing</span><span class="switch"><input id="internet" type="checkbox" checked><span class="track"></span></span></label>
+        <label class="critical-label" for="criticality"><span data-i18n="criticality">Business criticality</span><strong id="criticality-value">4 / 5</strong></label>
+        <input id="criticality" type="range" min="1" max="5" step="1" value="4" aria-label="Business criticality">
+        <p class="context-note" data-i18n="contextInfo">Change these values to see how exposure changes remediation priority.</p>
+      </div>
+      <div class="sidebar-bottom"><span class="online-status"><span class="pulse-dot"></span><span data-i18n="localFirst">LOCAL-FIRST ANALYSIS</span></span><small data-i18n="sidebarFoot">No accounts · No database · No secrets</small></div>
+    </aside>
+
+    <div class="body-area">
+      <header class="topbar">
+        <div class="breadcrumbs"><span data-i18n="securityOps">SECURITY OPERATIONS</span><span class="divider-slash">/</span><strong id="breadcrumb">Overview</strong></div>
+        <div class="top-actions"><span class="status-chip"><span class="status-spark">◆</span><span data-i18n="readOnly">READ-ONLY ANALYSIS</span></span><button id="language" class="icon-button lang-button" type="button" aria-label="Switch language">العربية</button><a class="icon-button github-button" href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub">⌘</a></div>
+      </header>
+      <main class="main-content" id="main">
+        <section class="intro" id="overview">
+          <div class="eyebrow"><span class="eyebrow-rule"></span><span data-i18n="eyebrow">VULNERABILITY INTELLIGENCE PLATFORM</span></div>
+          <div class="hero-row"><div><h1 data-i18n="heroTitle">Know what to fix.<br><em>Know why it matters.</em></h1><p class="hero-sub" data-i18n="heroSub">Turn dependency inventories into explainable, actionable vulnerability priorities—without guesswork.</p></div><div class="hero-ornament" aria-hidden="true"><div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit-center">VG<span>◆</span></div></div></div>
+          <div class="mobile-context" aria-label="Mobile asset context"><label><span data-i18n="exposure">Internet-facing</span><input id="mobile-internet" type="checkbox" checked></label><label><span data-i18n="criticality">Business criticality</span><input id="mobile-criticality" type="range" min="1" max="5" value="4" step="1"></label></div>
+          <div class="hero-actions"><button class="btn primary" id="import-button" type="button"><span>↥</span> <span data-i18n="import">Import CycloneDX SBOM</span></button><input id="upload" type="file" accept=".json,application/json" hidden><button class="btn ghost" id="demo-button" type="button"><span>◈</span> <span data-i18n="demo">Load demo</span></button><button class="btn ghost" id="live-button" type="button" disabled><span>⌁</span><span data-i18n="live">Check OSV live</span></button><button class="btn text-button" id="export-button" type="button" disabled><span>↓</span><span data-i18n="export">Export JSON report</span></button></div>
+          <div id="notice" class="notice demo-notice" role="status"><span class="notice-mark">ⓘ</span><span id="notice-text">DEMO MODE — The sample advisories are fictional. Import a real CycloneDX SBOM for actual analysis.</span></div>
+        </section>
+
+        <section class="stats-grid" aria-label="Risk overview">
+          <div class="stat-card"><div class="stat-heading"><span data-i18n="totalFindings">TOTAL FINDINGS</span><span class="stat-icon">◫</span></div><div class="stat-number" id="metric-findings">—</div><div class="stat-foot"><span class="small-tag" id="project-tag">DEMO</span><span data-i18n="fromData">from supplied data</span></div></div>
+          <div class="stat-card"><div class="stat-heading"><span data-i18n="highestScore">TOP PRIORITY SCORE</span><span class="stat-icon">◈</span></div><div class="stat-number" id="metric-score">—<span class="unit">/100</span></div><div class="stat-foot"><span class="small-tag orange-tag" data-i18n="heuristic">HEURISTIC</span><span data-i18n="notProbability">not exploit probability</span></div></div>
+          <div class="stat-card"><div class="stat-heading"><span data-i18n="affectedPackages">AFFECTED PACKAGES</span><span class="stat-icon">⌘</span></div><div class="stat-number" id="metric-affected">—</div><div class="stat-foot"><span id="total-pkgs">—</span><span data-i18n="inInventory">total in inventory</span></div></div>
+          <div class="stat-card"><div class="stat-heading"><span data-i18n="kevListed">KEV EVIDENCE</span><span class="stat-icon red-icon">◇</span></div><div class="stat-number" id="metric-kev">—</div><div class="stat-foot"><span class="small-tag" id="kev-source" data-i18n="kevSource">CISA SIGNAL</span><span data-i18n="whereAvailable">where available</span></div></div>
+        </section>
+
+        <section class="analysis-grid" aria-label="Threat breakdown">
+          <article class="surface distribution"><div class="section-heading"><div><div class="eyebrow muted" data-i18n="riskIntelligence">RISK INTELLIGENCE</div><h2 data-i18n="distribution">Risk distribution</h2></div><span class="tiny-label" data-i18n="byScore">BY PRIORITY SCORE</span></div>
+            <div class="donut-layout"><div class="donut" id="donut"><div class="donut-hole"><strong id="donut-total">0</strong><span data-i18n="findingsSmall">FINDINGS</span></div></div><div id="legend" class="legend"></div></div>
+            <p class="bottom-fine" data-i18n="riskNote">Scores are traceable heuristics, not a standardized severity or exploitation prediction.</p>
+          </article>
+          <article class="surface graph-surface" id="graph"><div class="section-heading"><div><div class="eyebrow muted" data-i18n="dependencyIntelligence">DEPENDENCY INTELLIGENCE</div><h2 data-i18n="dependencyGraph">Dependency graph</h2></div><span class="tiny-label"><span class="mini-green">●</span> <span data-i18n="graphHint">click a package to filter</span></span></div>
+            <div class="graph-view" id="graph-view"><svg id="dependency-svg" role="img" aria-label="Dependency relationships" viewBox="0 0 720 320" preserveAspectRatio="xMidYMid meet"></svg></div>
+            <div class="graph-footer"><span><i class="dot critical-dot"></i><span data-i18n="affected">Affected</span></span><span><i class="dot clean-dot"></i><span data-i18n="noFinding">No finding</span></span><span><i class="dot app-dot"></i><span data-i18n="root">Root application</span></span></div>
+          </article>
+        </section>
+
+        <section class="findings-section surface" id="findings"><div class="section-heading findings-header"><div><div class="eyebrow muted" data-i18n="actionableIntel">ACTIONABLE INTELLIGENCE</div><h2 data-i18n="findingsTitle">Prioritized findings <span id="finding-count" class="count-bubble">0</span></h2></div><div class="filter-bar"><label class="search-field"><span>⌕</span><input id="search" type="search" placeholder="Search finding or package" aria-label="Search findings"></label><select id="severity" aria-label="Filter by level"><option value="all">All levels</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select><button type="button" id="clear-filter" class="filter-clear" title="Clear filters">↺</button></div></div>
+          <div class="table-scroll"><table class="findings-table"><thead><tr><th data-i18n="thPriority">PRIORITY</th><th data-i18n="thPackage">PACKAGE / VERSION</th><th data-i18n="thFinding">VULNERABILITY</th><th data-i18n="thSignals">EVIDENCE SIGNALS</th><th data-i18n="thDependency">DEPENDENCY</th><th></th></tr></thead><tbody id="findings-body"></tbody></table></div>
+          <div id="empty-state" class="empty-state" hidden><span>◇</span><strong data-i18n="nothingHere">No matching findings</strong><p data-i18n="emptyHint">Clear your filters, import an SBOM with vulnerability assertions, or run an OSV lookup.</p></div>
+          <div class="table-footer"><span id="rows-label">0 findings</span><span data-i18n="readOnlyFoot">Analysis only · No exploitation · No state stored</span></div>
+        </section>
+
+        <section class="methodology-section" id="methodology"><div class="methodology-card"><div><div class="eyebrow muted" data-i18n="transparent">TRANSPARENT BY DESIGN</div><h2 data-i18n="engineTitle">An explainable engine. Not a black box.</h2><p data-i18n="engineText">Every point is accounted for. CVSS, EPSS, KEV, internet exposure and business criticality build the triage score. Missing evidence is explicitly marked instead of invented.</p></div><div class="weight-list"><div><span data-i18n="cvssLabel">CVSS impact</span><strong>35</strong><i class="meter"><b></b></i></div><div><span data-i18n="epssLabel">EPSS likelihood</span><strong>25</strong><i class="meter"><b></b></i></div><div><span data-i18n="kevLabel">KEV listing</span><strong>25</strong><i class="meter"><b></b></i></div><div><span data-i18n="exposureLabel">Internet exposure</span><strong>10</strong><i class="meter"><b></b></i></div><div><span data-i18n="businessLabel">Business criticality</span><strong>5</strong><i class="meter"><b></b></i></div></div></div></section>
+        <footer class="footer"><span>VulnGraph v1.0 · Explainable security engineering</span><span data-i18n="footer">For authorized, defensive analysis only</span></footer>
+      </main>
+    </div>
+  </div>
+  <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+  <aside id="details" class="drawer" role="dialog" aria-modal="true" aria-labelledby="detail-title" aria-hidden="true"><div class="drawer-head"><span class="eyebrow muted" data-i18n="findingDetail">FINDING DETAILS</span><button id="close-drawer" class="close-drawer" type="button" aria-label="Close details">×</button></div><div id="drawer-body" class="drawer-body"></div></aside>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
