@@ -43,4 +43,3 @@ echo.
 echo VulnGraph did not start. Please check the error shown above.
 pause
 exit /b 1
-
